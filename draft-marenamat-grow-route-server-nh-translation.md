@@ -42,6 +42,7 @@ normative:
   I-D.chroboczek-intarea-v4-via-v6: mixed-nh
 
 informative:
+  RFC1918: private-ipv4
   I-D.schoen-intarea-unicast-240: schoen-240
   DE-CIX-EVPN:
     title: Peering LAN 2.0 — Introduction of EVPN at DE-CIX
@@ -100,11 +101,11 @@ Legacy speaker:
 
 Supporting speaker:
 : Any BGP speaker with support for IPv4 NLRIs with IPv6 next hops,
-  and with an assigned IPv4 address.
+  while still capable of producing and receiving IPv4 next hops.
 
 Unnumbered speaker:
 : Any BGP speaker with support for IPv4 NLRIs with IPv6 next hops,
-  with no IPv4 address assinged.
+  with no support for IPv4 next hops.
 
 {::boilerplate bcp14-tagged}
 
@@ -140,9 +141,9 @@ MUST decide on an IPv4 prefix (or a set of IPv4 prefixes) short enough to
 accomodate the number of speakers in the IXP network. This prefix MAY be
 different for different clients. This prefix is called Speaker-specific local prefix.
 
-For every particular speaker, the IXP then assigns an IPv4 address from the
-Speaker-specific local prefix for every triplet in the LAT, creating a Specific
-Local Address Table (SLAT).
+For every Supporting and Legacy Speaker, the IXP then creates a Specific Local
+Address Table (SLAT) by assigning a unique IPv4 address from the Speaker-specific
+local prefix for every triplet in the LAT.
 
 The Unnumbered Speakers need no such allocation.
 
@@ -208,9 +209,17 @@ record:
 | -------------------- | ------------------------- |
 {: title="Shared Address Space"}
 
-Following the claims in {{-schoen-240}}, there are already networks which have
-completely exhausted all the private space addresses, and some of them have
-already been squatting the experim
+The allocation is probably not strictly needed, as most of the Legacy Speakers
+will still have some of the private IPv4 addresses {{-private-ipv4}} available
+to use for the SLAT.  Yet, these available ranges may be different between
+networks. To reduce complexity, this allocation will help IXPs to have a shared
+SLAT for most of the Legacy Speakers.
+
+Some large networks have also claimed recently {{Section 6.1 of -schoen-240}}
+that they are already using the experimental range for their internal purposes
+because they are already out of the private IPv4 addresses. These networks would
+have probably needed to negotiate a custom SLAT block with the IXP anyway, with
+or without the allocation.
 
 # Operational and Management Considerations
 

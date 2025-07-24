@@ -122,10 +122,11 @@ Table of Contents
       IPv6 next hops in context of an IXP.
 
    Supporting speaker:  Any BGP speaker with support for IPv4 NLRIs with
-      IPv6 next hops, and with an assigned IPv4 address.
+      IPv6 next hops, while still capable of producing and receiving
+      IPv4 next hops.
 
    Unnumbered speaker:  Any BGP speaker with support for IPv4 NLRIs with
-      IPv6 next hops, with no IPv4 address assinged.
+      IPv6 next hops, with no support for IPv4 next hops.
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -169,9 +170,10 @@ Table of Contents
    IXP network.  This prefix MAY be different for different clients.
    This prefix is called Speaker-specific local prefix.
 
-   For every particular speaker, the IXP then assigns an IPv4 address
-   from the Speaker-specific local prefix for every triplet in the LAT,
-   creating a Specific Local Address Table (SLAT).
+   For every Supporting and Legacy Speaker, the IXP then creates a
+   Specific Local Address Table (SLAT) by assigning a unique IPv4
+   address from the Speaker-specific local prefix for every triplet in
+   the LAT.
 
    The Unnumbered Speakers need no such allocation.
 
@@ -250,10 +252,18 @@ Table of Contents
 
                       Table 1: Shared Address Space
 
-   Following the claims in [I-D.schoen-intarea-unicast-240], there are
-   already networks which have completely exhausted all the private
-   space addresses, and some of them have already been squatting the
-   experim
+   The allocation is probably not strictly needed, as most of the Legacy
+   Speakers will still have some of the private IPv4 addresses [RFC1918]
+   available to use for the SLAT.  Yet, these available ranges may be
+   different between networks.  To reduce complexity, this allocation
+   will help IXPs to have a shared SLAT for most of the Legacy Speakers.
+
+   Some large networks have also claimed recently Section 6.1 of
+   [I-D.schoen-intarea-unicast-240] that they are already using the
+   experimental range for their internal purposes because they are
+   already out of the private IPv4 addresses.  These networks would have
+   probably needed to negotiate a custom SLAT block with the IXP anyway,
+   with or without the allocation.
 
 5.  Operational and Management Considerations
 
@@ -375,6 +385,11 @@ Table of Contents
               Internet-Draft, draft-schoen-intarea-unicast-240-09, 23
               June 2025, <https://datatracker.ietf.org/doc/html/draft-
               schoen-intarea-unicast-240-09>.
+
+   [RFC1918]  Rekhter, Y., Moskowitz, B., Karrenberg, D., de Groot, G.
+              J., and E. Lear, "Address Allocation for Private
+              Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
+              February 1996, <https://www.rfc-editor.org/rfc/rfc1918>.
 
 Acknowledgments
 

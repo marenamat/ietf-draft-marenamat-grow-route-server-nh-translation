@@ -6,6 +6,7 @@ category: std
 docname: draft-marenamat-grow-route-server-nh-translation-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
+updates: 6890, 7947
 date:
 consensus: true
 v: 3
@@ -191,9 +192,9 @@ IXP Interconnection Space.
 {{Section 2.2.2 of -special-purpose-ip}} is updated by adding the following
 record:
 
-+----------------------+---------------------------+
+| -------------------- | ------------------------- |
 | Attribute            | Value                     |
-+----------------------+---------------------------+
+| -------------------- | ------------------------- |
 | Address Block        | TBD                       |
 | Name                 | IXP Interconnection Space |
 | RFC                  | TBD                       |
@@ -204,8 +205,8 @@ record:
 | Forwardable          | False                     |
 | Global               | False                     |
 | Reserved-by-Protocol | False                     |
-+----------------------+---------------------------+
-Table 3: Shared Address Space
+| -------------------- | ------------------------- |
+{: title="Shared Address Space"}
 
 Following the claims in {{-schoen-240}}, there are already networks which have
 completely exhausted all the private space addresses, and some of them have

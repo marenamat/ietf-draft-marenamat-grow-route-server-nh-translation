@@ -9,17 +9,17 @@ number:
 date:
 consensus: true
 v: 3
-area: "Operations and Management Area"
+area: "Operations and Management"
 workgroup: "Global Routing Operations"
 keyword:
  - coexistence of IPv4 and IPv6
  - ARP proxying
  - address translation
 venue:
-  group: "GROW (Global Routing Operations)"
-  type: Working Group
-  mail: grow@ietf.org
-  github: marenamat/ietf-draft-marenamat-grow-route-server-nh-translation
+  group: "Global Routing Operations"
+  type: "Working Group"
+  mail: "grow@ietf.org"
+  github: "marenamat/ietf-draft-marenamat-grow-route-server-nh-translation"
 
 author:
   - name: Maria Matejka

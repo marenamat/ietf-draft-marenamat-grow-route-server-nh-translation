@@ -13,7 +13,7 @@ This is the working area for the individual Internet-Draft, "Route Server Next H
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/marenamat/ietf-draft-marenamat-grow-route-server-nh-translation/blob/gh-pages/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/marenamat/ietf-draft-marenamat-grow-route-server-nh-translation/blob/main/CONTRIBUTING.md).
 
 The contributing file also has tips on how to make contributions, if you
 don't already know how to do that.

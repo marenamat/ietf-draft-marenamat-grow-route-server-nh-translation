@@ -56,7 +56,7 @@ informative:
 
 --- abstract
 
-Internet Exchange BGP Route Server (RFC 7947) is an interconnection broker
+An Internet Exchange BGP Route Server (RFC 7947) is an interconnection broker
 for three or more External BGP speakers on a shared LAN.
 
 To support IPv6 Next Hops for IPv4 NLRIs (RFC 8950) on an Internet Exchange,
@@ -73,7 +73,7 @@ with others not supporting it.
 Traditionally, Internet Exchange BGP Route Servers {{-internet-exchange}}
 serve IPv6 NLRIs with IPv6 next hops, and IPv4 NLRIs with IPv4 next hops.
 
-Recently, there have been networks running IPv4 only on end hosts and
+Recently, there have been networks running IPv4-only on end hosts and
 forwarding the IPv4 traffic over IPv6-only intermediate hosts {{-mixed-nh}}.
 In the Internet Exchange environment, however, these networks need an IPv4 address
 assigned to allow routing from and to legacy-only networks where IPv6 nexthops
@@ -113,14 +113,14 @@ Unnumbered speaker:
 
 All IPv4 routes announced to and from Legacy speakers must have IPv4 next hops,
 while all IPv4 routes announced to and from Unnumbered speakers must have IPv6
-next hops.  To facilitate reachability between these speakers, we need to
+next hops. To facilitate reachability between these speakers, we need to
 translate between IPv4 and IPv6 next hops in BGP, IPv6 ND and ARP.
 
 ## Speaker configuration
 
 All speakers SHOULD have a fixed MAC address set and registered with the IXP.
 
-All speakers MUST have their IPv6 LLA and IPv6 GUA and assigned
+All speakers MUST have their IPv6 LLA and IPv6 GUA assigned
 by the IXP. They do not have to set these addresses up on the respective interfaces
 as long as their BGP sessions are able to run.
 
@@ -138,7 +138,7 @@ addresses for the number of speakers present in the local network.
 
 Therefore, the IXP, in cooperation with every Supporting Speaker and Legacy Speaker,
 MUST decide on an IPv4 prefix (or a set of IPv4 prefixes) short enough to
-accomodate the number of speakers in the IXP network. This prefix MAY be
+accommodate the number of speakers in the IXP network. This prefix MAY be
 different for different clients. This prefix is called Speaker-specific local prefix.
 
 For every Supporting and Legacy Speaker, the IXP then creates a Specific Local
@@ -159,7 +159,6 @@ for that speaker.
 
 ## NEXT_HOP Attribute management on Route Servers
 
-When the Route Server receives a route where the NEXT_HOP Attribute contains
 When a route with IPv4 NLRI and IPv4 NEXT_HOP Attribute is received from any
 speaker, the Route Server MUST rewrite the NEXT_HOP according to the sender's
 SLAT to the IPv6 GUA or LLA.
@@ -168,7 +167,9 @@ When the Route Server sends a route to a Legacy speaker, it MUST rewrite
 the NEXT_HOP according to the receiver's SLAT to the assigned IPv4 address.
 
 When the Route Server sends a route to a Supporting speaker, it SHOULD NOT
-rewrite the NEXT_HOP. When the Route server sends a route to an Unnumbered speaker,
+rewrite the NEXT_HOP.
+
+When the Route server sends a route to an Unnumbered speaker,
 it MUST NOT rewrite the NEXT_HOP.
 
 The Route Server MUST NOT propagate any route where the NEXT_HOP Attribute
@@ -246,7 +247,7 @@ the result of the egress translation for a selected client.
 # Security Considerations
 
 Implementing the ARP and ND snooping should improve the overall security of IXPs
-by blocking possible ARP or ND spoofing, both inadvertent and intended. {{DE-CIX-EVPN}}
+by blocking possible ARP or ND spoofing, both inadvertent and intended {{DE-CIX-EVPN}}.
 
 Mistakes in the MAC address registration and manual management of IP address assignment
 may lead to inadvertent invalid route announcement. It's recommended to run automated

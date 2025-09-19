@@ -56,14 +56,23 @@ informative:
 
 --- abstract
 
-An Internet Exchange BGP Route Server (RFC 7947) is an interconnection broker
-for three or more External BGP speakers on a shared LAN.
+With the advent of RFC8950, Internet Exchang Points (IXPs) are enabled to rely
+solely on IPv6 addresses for adressing in their peering LANs. However, routers
+not supporting RFC8950 are a technical roadblock.
 
-To support IPv6 Next Hops for IPv4 NLRIs (RFC 8950) on an Internet Exchange,
-traditionally, all BGP speakers connected to the Route Server must support it.
+While it is easier to extent the capabilities of the IXP Route Server (RS) instead
+of those of every unsupporting router, this document introduces the concept of Specific
+Local Address Tables (SLATs). SLATs translate BGP next-hops between all IXP members,
+regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 
-This document defines how to allow coexistence of speakers supporting RFC 8950
-with others not supporting it.
+[//]: An Internet Exchange BGP Route Server (RFC 7947) is an interconnection broker
+[//]: for three or more External BGP speakers on a shared LAN.
+
+[//]: To support IPv6 Next Hops for IPv4 NLRIs (RFC 8950) on an Internet Exchange,
+[//]: traditionally, all BGP speakers connected to the Route Server must support it.
+
+[//]: This document defines how to allow coexistence of speakers supporting RFC 8950
+[//]: with others not supporting it.
 
 
 --- middle

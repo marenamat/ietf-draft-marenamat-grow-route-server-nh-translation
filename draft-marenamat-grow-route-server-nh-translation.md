@@ -62,7 +62,7 @@ not supporting RFC8950 are a technical roadblock.
 
 While it is easier to extent the capabilities of the IXP Route Server (RS) instead
 of those of every unsupporting router, this document introduces the concept of Specific
-Local Address Tables (SLATs). SLATs translate BGP next-hops between all IXP members,
+Local Address Tables (SLATs). SLATs translate BGP next hops between all IXP members,
 regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 
 [//]: An Internet Exchange BGP Route Server (RFC 7947) is an interconnection broker

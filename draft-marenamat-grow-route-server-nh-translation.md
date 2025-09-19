@@ -79,19 +79,23 @@ regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 
 # Introduction
 
-Traditionally, Internet Exchange BGP Route Servers {{-internet-exchange}}
-serve IPv6 NLRIs with IPv6 next hops, and IPv4 NLRIs with IPv4 next hops.
+Traditionally, Internet Exchange Point (IXP) Border Gateway Protocol (BGP)
+Route Servers (RS) {{-internet-exchange}} serve IPv6 Network Layer Reachability
+Information (NRLI) with IPv6 next hops, and IPv4 NLRI with IPv4 next hops.
+On the one hand, this dual-stack operation allows both IPv4 and IPv6 supporting BGP
+speakers in the peering LAN to exchange NLRI with another and the route server. On
+the other hand, this requires them to have next hop addresses of the same Address
+Familiy (AF) as well.
 
-Recently, there have been networks running IPv4-only on end hosts and
-forwarding the IPv4 traffic over IPv6-only intermediate hosts {{-mixed-nh}}.
-In the Internet Exchange environment, however, these networks need an IPv4 address
+With the depletion of available IPv4 address space, solutions have emerged to
+support forwarding of IPv4 traffic over IPv6-only intermediate hosts {{-mixed-nh}}.
+In the IXP environment, however, these networks still need an IPv4 address
 assigned to allow routing from and to legacy-only networks where IPv6 nexthops
 for IPv4 NLRIs {{-bgp-mixed-nh}} are not supported.
 
-This document specifies how to extend the ARP Proxy {{-peering-evpn-arp-proxy}}
-functionality to allow deployment of IPv6 next hops for IPv4 NLRIs
-{{-bgp-mixed-nh}} in networks where some BGP speakers do not support that,
-without the need to assign public IPv4 addresses to all BGP speakers.
+This document therefore specifies how to extend the ARP Proxy {{-peering-evpn-arp-proxy}}
+functionality to allow deployment of IPv6 next hops for IPv4 NLRIs {{-bgp-mixed-nh}},
+without the need to assign public IPv4 addresses to any of the BGP speakers.
 
 This document does not cover IPv6 NLRIs with IPv4 next hops.
 

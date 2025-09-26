@@ -4,9 +4,9 @@
 
 Global Routing Operations                                     M. Matejka
 Internet-Draft                                                    CZ.NIC
-Updates: 6890, 7947 (if approved)                           24 July 2025
+Updates: 6890, 7947 (if approved)                      26 September 2025
 Intended status: Standards Track                                        
-Expires: 25 January 2026
+Expires: 30 March 2026
 
 
                    Route Server Next Hop Translation
@@ -14,15 +14,16 @@ Expires: 25 January 2026
 
 Abstract
 
-   Internet Exchange BGP Route Server (RFC 7947) is an interconnection
-   broker for three or more External BGP speakers on a shared LAN.
+   With the advent of RFC8950, Internet Exchang Points (IXPs) are
+   enabled to rely solely on IPv6 addresses for adressing in their
+   peering LANs.  However, routers not supporting RFC8950 are a
+   technical roadblock.
 
-   To support IPv6 Next Hops for IPv4 NLRIs (RFC 8950) on an Internet
-   Exchange, traditionally, all BGP speakers connected to the Route
-   Server must support it.
-
-   This document defines how to allow coexistence of speakers supporting
-   RFC 8950 with others not supporting it.
+   It is easier to extend the capabilities of the IXP Route Server (RS)
+   instead of those of every unsupporting router.  Thus, this document
+   introduces the concept of Specific Local Address Tables (SLATs).
+   SLATs translate BGP next hops between all IXP members, regardless of
+   their RFC8950 support, paving the way for IPv6-only IXPs.
 
 About This Document
 
@@ -56,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 January 2026.
+   This Internet-Draft will expire on 30 March 2026.
 
 Copyright Notice
 
@@ -77,10 +78,10 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Providing reachability between Legacy and Unnumbered speakers
-     3.1.  Speaker configuration
-     3.2.  IPv4 assignment
-     3.3.  ARP and ND Proxy configuration
-     3.4.  NEXT_HOP Attribute management on Route Servers
+     3.1.  Speaker Configuration
+     3.2.  IPv4 Assignment
+     3.3.  ARP and ND Proxy Configuration
+     3.4.  NEXT_HOP Attribute Management on Route Servers
    4.  IXP Interconnection Space
    5.  Operational and Management Considerations
    6.  Security Considerations
@@ -93,20 +94,27 @@ Table of Contents
 
 1.  Introduction
 
-   Traditionally, Internet Exchange BGP Route Servers [RFC7947] serve
-   IPv6 NLRIs with IPv6 next hops, and IPv4 NLRIs with IPv4 next hops.
+   Traditionally, Internet Exchange Point (IXP) Border Gateway Protocol
+   (BGP) Route Servers (RS) [RFC7947] serve IPv6 Network Layer
+   Reachability Information (NRLI) with IPv6 next hops, and IPv4 NLRI
+   with IPv4 next hops to the BGP speakers in their peering LAN.  On the
+   one hand, this dual-stack operation allows both IPv4 and IPv6
+   supporting BGP speakers to exchange NLRI with another and the route
+   server.  On the other hand, this requires them to have next hop
+   addresses of the same Address Familiy (AF) as well.
 
-   Recently, there have been networks running IPv4 only on end hosts and
-   forwarding the IPv4 traffic over IPv6-only intermediate hosts
-   [I-D.chroboczek-intarea-v4-via-v6].  In the Internet Exchange
-   environment, however, these networks need an IPv4 address assigned to
-   allow routing from and to legacy-only networks where IPv6 nexthops
-   for IPv4 NLRIs [RFC8950] are not supported.
+   With the depletion of available IPv4 address space, solutions have
+   emerged to support forwarding of IPv4 traffic over IPv6-only
+   intermediate hosts [I-D.chroboczek-intarea-v4-via-v6].  In the IXP
+   environment, however, these networks would still require an IPv4
+   address to be assigned to allow for routing from and to legacy-only
+   networks where IPv6 nexthops for IPv4 NLRIs [RFC8950] are not
+   supported.
 
-   This document specifies how to extend the ARP Proxy [RFC9161]
-   functionality to allow deployment of IPv6 next hops for IPv4 NLRIs
-   [RFC8950] in networks where some BGP speakers do not support that,
-   without the need to assign public IPv4 addresses to all BGP speakers.
+   This document specifies how to extend the Address Resolution Protocol
+   (ARP) Proxy [RFC9161] functionality to allow deployment of IPv6 next
+   hops for IPv4 NLRIs [RFC8950], without the need to assign public IPv4
+   addresses to any of the BGP speakers.
 
    This document does not cover IPv6 NLRIs with IPv4 next hops.
 
@@ -115,18 +123,18 @@ Table of Contents
    The terminology of [RFC9161], [RFC7947] and [RFC4271] applies.
 
    Client:  A BGP speaker which is connected to the IXP's Route Server.
-      The client may be a Legacy speaker, Supporting speaker or
+      The Client may be a Legacy speaker, Supporting speaker or
       Unnumbered speaker.
 
-   Legacy speaker:  Any BGP speaker with no support for IPv4 NLRIs with
-      IPv6 next hops in context of an IXP.
+   Legacy speaker:  Any Client with no support for IPv4 NLRIs with IPv6
+      next hops in context of an IXP.
 
-   Supporting speaker:  Any BGP speaker with support for IPv4 NLRIs with
-      IPv6 next hops, while still capable of producing and receiving
-      IPv4 next hops.
+   Supporting speaker:  Any Client with support for IPv4 NLRIs with IPv6
+      next hops, while still capable of producing and receiving IPv4
+      next hops.
 
-   Unnumbered speaker:  Any BGP speaker with support for IPv4 NLRIs with
-      IPv6 next hops, with no support for IPv4 next hops.
+   Unnumbered speaker:  Any Client with support for IPv4 NLRIs with IPv6
+      next hops, and with no support for IPv4 next hops.
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -136,74 +144,75 @@ Table of Contents
 
 3.  Providing reachability between Legacy and Unnumbered speakers
 
-   All IPv4 routes announced to and from Legacy speakers must have IPv4
+   All IPv4 routes announced to and from Legacy speakers MUST have IPv4
    next hops, while all IPv4 routes announced to and from Unnumbered
-   speakers must have IPv6 next hops.  To facilitate reachability
-   between these speakers, we need to translate between IPv4 and IPv6
-   next hops in BGP, IPv6 ND and ARP.
+   speakers MUST have IPv6 next hops.  To facilitate reachability
+   between these Clients, we need to translate between IPv4 and IPv6
+   next hops in BGP, IPv6 Neighbor Discovery (ND) and ARP.
 
-3.1.  Speaker configuration
+3.1.  Speaker Configuration
 
-   All speakers SHOULD have a fixed MAC address set and registered with
+   All Clients SHOULD have a fixed MAC address set and registered with
    the IXP.
 
-   All speakers MUST have their IPv6 LLA and IPv6 GUA and assigned by
-   the IXP.  They do not have to set these addresses up on the
-   respective interfaces as long as their BGP sessions are able to run.
+   All Clients MUST have their IPv6 link-local address (LLA) and IPv6
+   globally unicast address (GUA) assigned by the IXP.  They MAY set
+   these addresses up on the respective interfaces wihle their already
+   established BGP sessions are still able to run.
 
    These assignments MUST be unique, such that for any two triples (MAC,
-   IPv6 LLA, IPv6 GUA) and (MAC', LLA', GUA') it holds that MAC != MAC',
-   LLA != LLA' and GUA != GUA'.
+   LLA, GUA) and (MAC', LLA', GUA') it holds that MAC != MAC', LLA !=
+   LLA' and GUA != GUA'.
 
    This set of triplets is called Local Address Table (LAT).
 
-3.2.  IPv4 assignment
+3.2.  IPv4 Assignment
 
    Contrary to IPv6 where both the LLA and GUA space allow for sharing
    the same prefix, in IPv4 this isn't always possible as the IXP may
-   run out of global IPv4 addresses for the number of speakers present
-   in the local network.
+   run out of global IPv4 addresses for the number of Clients present in
+   the local network.
 
    Therefore, the IXP, in cooperation with every Supporting Speaker and
    Legacy Speaker, MUST decide on an IPv4 prefix (or a set of IPv4
-   prefixes) short enough to accomodate the number of speakers in the
-   IXP network.  This prefix MAY be different for different clients.
-   This prefix is called Speaker-specific local prefix.
+   prefixes) short enough to accommodate the number of Clients in the
+   IXP network.  This prefix MAY be different for different Clients.
+   This prefix is called Client-specific local prefix (CSLP).
 
    For every Supporting and Legacy Speaker, the IXP then creates a
    Specific Local Address Table (SLAT) by assigning a unique IPv4
-   address from the Speaker-specific local prefix for every triplet in
-   the LAT.
+   address from the CSLP for every triplet in the LAT.
 
    The Unnumbered Speakers need no such allocation.
 
-   Legacy speakers SHOULD set up their NEXT_HOP Attribute handling so
+   Legacy speakers SHOULD set up their NEXT_HOP attribute handling so
    that they never propagate the SLAT IPv4 addresses.
 
-3.3.  ARP and ND Proxy configuration
+3.3.  ARP and ND Proxy Configuration
 
-   For each speaker, the IXP MUST set up ARP and ND snooping.  The IXP
-   MUST NOT forward any ARP nor ND traffic between speakers.  The IXP
-   MUST answer all ARP and ND requests from the speakers themselves,
-   using the appropriate SLAT for that speaker.
+   For each Client, the IXP MUST set up ARP and ND snooping.  The IXP
+   MUST NOT forward neither ARP nor ND traffic between Clients.  The IXP
+   MUST answer all ARP and ND requests from the Clients themselves using
+   the respective SLAT column for that Client.
 
-3.4.  NEXT_HOP Attribute management on Route Servers
+3.4.  NEXT_HOP Attribute Management on Route Servers
 
-   When the Route Server receives a route where the NEXT_HOP Attribute
-   contains When a route with IPv4 NLRI and IPv4 NEXT_HOP Attribute is
-   received from any speaker, the Route Server MUST rewrite the NEXT_HOP
-   according to the sender's SLAT to the IPv6 GUA or LLA.
+   When a route with IPv4 NLRI and IPv4 NEXT_HOP Attribute is received
+   from any Client, the Route Server MUST rewrite the NEXT_HOP according
+   to the sender's SLAT to the IPv6 GUA or LLA.
 
    When the Route Server sends a route to a Legacy speaker, it MUST
    rewrite the NEXT_HOP according to the receiver's SLAT to the assigned
    IPv4 address.
 
    When the Route Server sends a route to a Supporting speaker, it
-   SHOULD NOT rewrite the NEXT_HOP.  When the Route server sends a route
-   to an Unnumbered speaker, it MUST NOT rewrite the NEXT_HOP.
+   SHOULD NOT rewrite the NEXT_HOP.
+
+   When the Route server sends a route to an Unnumbered speaker, it MUST
+   NOT rewrite the NEXT_HOP.
 
    The Route Server MUST NOT propagate any route where the NEXT_HOP
-   Attribute holds an address not assigned to any speaker by the
+   attribute holds an address not assigned to any Clients by the
    appropriate SLAT.
 
    Section 2.2.1 of [RFC7947] does not apply.
@@ -218,11 +227,11 @@ Table of Contents
    and possibly BGP session addressing.
 
    It is RECOMMENDED that the prefix used is the IXP Interconnection
-   Space for every speaker supporting this allocation, to reduce the
-   size of the SLATs.
+   Space for every Client supporting this allocation, to reduce the size
+   of the SLATs.
 
-   BGP speakers MUST NOT propagate any routes with IPv4 NLRI from the
-   IXP Interconnection Space.
+   Clients MUST NOT propagate any routes with IPv4 NLRI from the IXP
+   Interconnection Space.
 
    Section 2.2.2 of [RFC6890] is updated by adding the following record:
 
@@ -270,15 +279,15 @@ Table of Contents
    This setup should be possible to be rolled out in steps.  First, the
    ARP and ND snooping is not dependent on anything else in this
    document.  Then, setting up a new route server supporting IPv6 next
-   hops for IPv4 NLRI, and allowing Supporting clients to use that
+   hops for IPv4 NLRI, and allowing Supporting speakers to use that
    server while keeping also the traditional one.
 
-   The SLATs may be started as uniform for every client reflecting the
+   The SLATs may be started as uniform for every Client reflecting the
    current address assignment, allowing the Legacy Speakers into the new
-   route server, and gradual renumbering may occur later, client-by-
-   client, when the original IPv4 range starts being exhausted.
+   route server, and gradual renumbering may occur later, Client-by-
+   Client, when the original IPv4 range starts being exhausted.
 
-   The clients have to properly assess which address range is suitable
+   The Clients have to properly assess which address range is suitable
    for them to use for IXP interconnection.  If using the IXP
    Interconnection Space, they also have to check whether these
    addresses are considered eligible as next hops by their routing
@@ -288,13 +297,13 @@ Table of Contents
    hops in their human-facing interfaces (looking glasses).  It may be
    handy to display the original next hop (if it was IPv4), the actual
    IPv6 next hop, and also the result of the egress translation for a
-   selected client.
+   selected Client.
 
 6.  Security Considerations
 
    Implementing the ARP and ND snooping should improve the overall
    security of IXPs by blocking possible ARP or ND spoofing, both
-   inadvertent and intended.  [DE-CIX-EVPN]
+   inadvertent and intended [DE-CIX-EVPN].
 
    Mistakes in the MAC address registration and manual management of IP
    address assignment may lead to inadvertent invalid route
@@ -309,7 +318,7 @@ Table of Contents
    Mistakes in route announcements are contained to the route not being
    propagated further.
 
-   Mistakes in the client setup may lead to spreading unreachable routes
+   Mistakes in the Client setup may lead to spreading unreachable routes
    across their autonomous systems, causing inefficient routing.
 
    It is recommended to log rogue GARP or IPv6 DAD communication to

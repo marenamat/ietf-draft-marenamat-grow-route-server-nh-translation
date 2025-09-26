@@ -60,8 +60,8 @@ With the advent of RFC8950, Internet Exchang Points (IXPs) are enabled to rely
 solely on IPv6 addresses for adressing in their peering LANs. However, routers
 not supporting RFC8950 are a technical roadblock.
 
-While it is easier to extent the capabilities of the IXP Route Server (RS) instead
-of those of every unsupporting router, this document introduces the concept of Specific
+It is easier to extend the capabilities of the IXP Route Server (RS) instead
+of those of every unsupporting router. Thus, this document introduces the concept of Specific
 Local Address Tables (SLATs). SLATs translate BGP next hops between all IXP members,
 regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 

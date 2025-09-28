@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-25T00:54:21.411153+00:00",
+  "timestamp": "2025-09-28T00:59:54.495295+00:00",
   "repo": "marenamat/ietf-draft-marenamat-grow-route-server-nh-translation",
   "labels": [
     {
@@ -50,5 +50,75 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOPRV-Bs6qiP2y",
+      "title": "Non-technical changes",
+      "url": "https://github.com/marenamat/ietf-draft-marenamat-grow-route-server-nh-translation/pull/1",
+      "state": "MERGED",
+      "author": "dwagner-decix",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Interpunctation, term usage and capitalization consistency, source text formatting, typos.",
+      "createdAt": "2025-09-25T15:23:40Z",
+      "updatedAt": "2025-09-26T17:55:32Z",
+      "baseRepository": "marenamat/ietf-draft-marenamat-grow-route-server-nh-translation",
+      "baseRefName": "main",
+      "baseRefOid": "509ce59864e88c6c33a99542b8820f2c54e1778d",
+      "headRepository": "dwagner-decix/ietf-draft-marenamat-grow-route-server-nh-translation",
+      "headRefName": "main",
+      "headRefOid": "eb96c8e82405a8d4f95f3d57a66d7b08d46f731b",
+      "closedAt": "2025-09-26T17:55:32Z",
+      "mergedAt": "2025-09-26T17:55:32Z",
+      "mergedBy": "marenamat",
+      "mergeCommit": {
+        "oid": "eb96c8e82405a8d4f95f3d57a66d7b08d46f731b"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOPRV-Bs7C7ceg",
+          "commit": {
+            "abbreviatedOid": "325cf59"
+          },
+          "author": "marenamat",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-26T06:33:04Z",
+          "updatedAt": "2025-09-26T06:33:04Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "s/extent/extend/\r\n\r\nI prefer to split the sentence like \"It is easier to extend \u2026 instead of \u2026 unsupporting router. Thus, this document introduces \u2026\" as it feels more natural-english for me.",
+              "createdAt": "2025-09-26T06:33:04Z",
+              "updatedAt": "2025-09-26T06:33:05Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOPRV-Bs7DD71y",
+          "commit": {
+            "abbreviatedOid": "325cf59"
+          },
+          "author": "dwagner-decix",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-09-26T14:39:50Z",
+          "updatedAt": "2025-09-26T14:39:50Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "Done. Thanks! :)",
+              "createdAt": "2025-09-26T14:39:50Z",
+              "updatedAt": "2025-09-26T14:39:50Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

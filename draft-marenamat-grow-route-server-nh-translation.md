@@ -95,7 +95,7 @@ for IPv4 NLRIs {{-bgp-mixed-nh}} are not supported.
 This document specifies how to extend the Address Resolution Protocol (ARP) Proxy
 {{-peering-evpn-arp-proxy}} functionality to allow deployment of IPv6 next hops for
 IPv4 NLRIs {{-bgp-mixed-nh}}, without the need to assign public IPv4 addresses to
-any of the BGP speakers.
+any of the BGP speakers at IXPs.
 
 This document does not cover IPv6 NLRIs with IPv4 next hops.
 
@@ -130,7 +130,7 @@ next hops. To facilitate reachability between these Clients, we need to
 translate between IPv4 and IPv6 next hops in BGP, IPv6 Neighbor Discovery (ND)
 and ARP.
 
-## Speaker Configuration
+## Client Configuration
 
 All Clients SHOULD have a fixed MAC address set and registered with the IXP.
 
@@ -143,7 +143,7 @@ These assignments MUST be unique, such that for any two triples
 `(MAC, LLA, GUA)` and `(MAC', LLA', GUA')` it holds that
 `MAC != MAC'`, `LLA != LLA'` and `GUA != GUA'`.
 
-This set of triplets is called Local Address Table (LAT).
+This set of triples is called Local Address Table (LAT).
 
 ## IPv4 Assignment
 
@@ -158,14 +158,14 @@ different for different Clients. This prefix is called Client-specific local pre
 (CSLP).
 
 For every Supporting and Legacy Speaker, the IXP then creates a Specific Local
-Address Table (SLAT) by assigning a unique IPv4 address from the CSLP for every triplet
+Address Table (SLAT) by assigning a unique IPv4 address from the CSLP for every triple
 in the LAT.
 
 <!-- insert table here -->
 
 The Unnumbered Speakers need no such allocation.
 
-Legacy speakers SHOULD set up their NEXT_HOP attribute handling so that they
+Legacy Speakers SHOULD set up their NEXT_HOP attribute handling so that they
 never propagate the SLAT IPv4 addresses.
 
 ## ARP and ND Proxy Configuration

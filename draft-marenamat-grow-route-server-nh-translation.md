@@ -32,6 +32,14 @@ author:
     email:
     - maria.matejka@nic.cz
     - mq@jmq.cz
+  - name: Daniel Wagner
+    org: DE-CIX
+    street: Lindleystraße 12
+    city: Frankfurt am Main
+    code: 60314
+    country: Germany
+    email:
+    - daniel.wagner@de-cix.net
 
 normative:
   RFC4271: bgp

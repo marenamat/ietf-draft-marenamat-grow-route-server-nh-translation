@@ -89,7 +89,7 @@ Familiy (AF) as well.
 With the depletion of available IPv4 address space, solutions have emerged to
 support forwarding of IPv4 traffic over IPv6-only intermediate hosts {{-mixed-nh}}.
 In the IXP environment, however, these networks would still require an IPv4 address
-to be assigned to allow for routing from and to legacy-only networks where IPv6 nexthops
+to be assigned to allow for routing from and to legacy-only networks where IPv6 next hops
 for IPv4 NLRIs {{-bgp-mixed-nh}} are not supported.
 
 This document specifies how to extend the Address Resolution Protocol (ARP) Proxy

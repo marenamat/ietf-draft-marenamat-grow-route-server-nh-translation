@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-28T00:59:54.495295+00:00",
+  "timestamp": "2025-09-30T00:54:45.069912+00:00",
   "repo": "marenamat/ietf-draft-marenamat-grow-route-server-nh-translation",
   "labels": [
     {
@@ -119,6 +119,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOPRV-Bs6rKjo1",
+      "title": "Technical Changes",
+      "url": "https://github.com/marenamat/ietf-draft-marenamat-grow-route-server-nh-translation/pull/2",
+      "state": "OPEN",
+      "author": "dwagner-decix",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This MR brings some technical changes / completions / my own bits.\r\nPlease review carefully and reach out to me via chat in case of questions.\r\n\r\nFound some more nits, did some structuring, provided some tables for clarity, added myself as an author. Will come back after I did a sync with our peering services team. They most likely will have some more things to tackle.",
+      "createdAt": "2025-09-29T18:43:30Z",
+      "updatedAt": "2025-09-29T18:43:30Z",
+      "baseRepository": "marenamat/ietf-draft-marenamat-grow-route-server-nh-translation",
+      "baseRefName": "main",
+      "baseRefOid": "eb96c8e82405a8d4f95f3d57a66d7b08d46f731b",
+      "headRepository": "dwagner-decix/ietf-draft-marenamat-grow-route-server-nh-translation",
+      "headRefName": "main",
+      "headRefOid": "d2c004c1b11e8989bf9f8a8da77138584a77bca4",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }

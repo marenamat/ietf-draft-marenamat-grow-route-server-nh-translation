@@ -73,6 +73,9 @@ of those of every unsupporting router. Thus, this document introduces the concep
 Local Address Tables (SLATs). SLATs translate BGP next hops between all IXP members,
 regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 
+This document updates RFC 6890 by registering a special-purpose address,
+and RFC 7947 by specifying an allowed route modification at the route server.
+
 --- middle
 
 # Introduction

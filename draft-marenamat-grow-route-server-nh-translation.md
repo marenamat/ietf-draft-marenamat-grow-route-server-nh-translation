@@ -120,6 +120,14 @@ Unnumbered speaker:
 : Any Client with support for IPv4 NLRIs with IPv6 next hops,
   and with no support for IPv4 next hops.
 
+Production IPv4 prefix:
+: The IPv4 prefix used by the IXP operator to assign IPv4 addresses
+to the Clients.
+
+Production IPv6 prefix:
+: The IPv6 prefix used by the IXP operator to assign IPv6 addresses
+to the Clients.
+
 {::boilerplate bcp14-tagged}
 
 # Providing reachability between Legacy and Unnumbered speakers
@@ -148,7 +156,7 @@ These assignments MUST be unique, such that for any two triples
 `(MAC, LLA, GUA)` and `(MAC', LLA', GUA')` it holds that
 `MAC != MAC'`, `LLA != LLA'` and `GUA != GUA'`.
 
-IPv6 addresses from the production IPv6 prefix of the IXP MAY be
+IPv6 addresses from the Production IPv6 prefix of the IXP MAY be
 used for GUA allocation if there are unused addresses available
 and the above requirement holds.
 
@@ -164,12 +172,13 @@ to MAC addresses for Unnumbered speakers.
 
 ### IPv4 Address Assignment
 
-Due to IPv4 scarcity, IXP are typically assigned much less spacious IPv4 prefixes
-than IPv6 prefixes. Therefore, the IXP, in cooperation with every Supporting
-Speaker and Legacy Speaker, MUST decide on an IPv4 prefix (or a set of IPv4
-prefixes) short enough to accommodate the number of Clients in the IXP network.
-This prefix MAY be different for different Clients. This prefix is called
-Client-specific local prefix (CSLP).
+Due to IPv4 scarcity, IXP are typically assigned much less spacious
+Production IPv4 prefixes than Production IPv6 prefixes. Therefore, the IXP,
+in cooperation with every Supporting Speaker and Legacy Speaker, MUST decide
+on an IPv4 prefix (or a set of IPv4 prefixes) short enough to accommodate
+the number of Clients in the IXP network. This prefix MAY be different
+for different Clients. This prefix is called Client-specific local prefix
+(CSLP).
 
 For every Supporting and Legacy Speaker, the IXP then adds another column for
 every CSLP to the LAT, completing it to a Specific Local Address Table (SLAT).
@@ -275,9 +284,9 @@ a new route server supporting IPv6 next hops for IPv4 NLRI, and allowing Support
 speakers to use that server while keeping also the traditional one.
 
 The SLAT may be started as uniform for every Client reflecting the current address
-assignment, allowing the Legacy Speakers into the new route server, and gradual
-renumbering may occur later, Client-by-Client, when the original IPv4 range starts
-being exhausted.
+assignment from the Production IPv4 prefix. This allows the Legacy Speakers into
+the new route server, and gradual renumbering may occur later, Client-by-Client,
+when the Production IPv4 prefix starts being exhausted.
 
 The Clients have to properly assess which address range is suitable for them to use
 for IXP interconnection. If using the IXP Interconnection Space, they also have to

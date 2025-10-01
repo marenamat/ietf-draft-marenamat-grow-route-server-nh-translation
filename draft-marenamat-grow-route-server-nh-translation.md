@@ -140,7 +140,7 @@ and ARP.
 
 ## Client Address Assignment
 
-### MAC Adress Assignment
+### MAC Address Assignment
 
 All Clients SHOULD have a fixed MAC address set and registered
 with the IXP.
@@ -150,7 +150,7 @@ with the IXP.
 All Clients MUST have their IPv6 link-local address (LLA)
 and IPv6 globally unicast address (GUA) assigned by the IXP.
 They MAY set these addresses up on the respective interfaces
-wihle their already established BGP sessions are still able to run.
+while their already established BGP sessions are still able to run.
 
 These assignments MUST be unique, such that for any two triples
 `(MAC, LLA, GUA)` and `(MAC', LLA', GUA')` it holds that

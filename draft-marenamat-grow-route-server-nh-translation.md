@@ -153,8 +153,8 @@ used for GUA allocation if there are unused addresses available
 and the above requirement holds.
 
 The resulting set of triples is stored in a Local Address Table (LAT).
-This table is maintained by the IXP and used to translate next hops for
-Unnumbered speakers.
+This table is maintained by the IXP and used to translate next hops
+to MAC addresses for Unnumbered speakers.
 
 | MAC Address | Link Local Address | Global Unicast Address |
 | 00-00-5E-00-53-10 | FE80::10 | 2001:db8::10 |
@@ -174,8 +174,8 @@ Client-specific local prefix (CSLP).
 For every Supporting and Legacy Speaker, the IXP then adds another column for
 every CSLP to the LAT, completing it to a Specific Local Address Table (SLAT).
 These columns then hold a unique IPv4 address assigned from the respective CSLP
-for every triple in the LAT. These entries are used to translate next hops for
-Legacy speakers.
+for every triple in the LAT. These entries are used to translate next hops
+to MAC addresses for Legacy speakers.
 
 | MAC Address | Link Local Address | Global Unicast Address | CSLP 1 | CLSP 2 | ...
 | MAC Address | Link Local Address | Global Unicast Address | CSLP 1 | CLSP 2 | ...

@@ -201,7 +201,7 @@ column for that Client.
 ## NEXT_HOP Attribute Management at Route Servers
 
 When a route with IPv4 NLRI and IPv4 NEXT_HOP Attribute is announced from any
-Client to the RS, it MUST rewrite the NEXT_HOP according to the Client's
+Client, the RS MUST rewrite the NEXT_HOP according to the Client's
 IPv6 GUA or LLA entry in the SLAT.
 
 When the RS sends a route to a Legacy speaker, it MUST rewrite

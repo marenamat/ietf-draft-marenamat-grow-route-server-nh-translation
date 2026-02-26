@@ -73,6 +73,9 @@ of those of every unsupporting router. Thus, this document introduces the concep
 Local Address Tables (SLATs). SLATs translate BGP next hops between all IXP members,
 regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 
+This document also introduces another, more transparent variant of BGP next hop
+translation applicable in IXPs which do not employ ARP and ND proxying.
+
 This document updates RFC 6890 by registering a special-purpose address,
 and RFC 7947 by specifying an allowed route modification at the route server.
 
@@ -96,7 +99,8 @@ to be assigned to allow for routing from and to legacy-only networks where IPv6 
 for IPv4 NLRIs {{-bgp-mixed-nh}} are not supported.
 
 This document specifies how to extend the Address Resolution Protocol (ARP) Proxy
-{{-peering-evpn-arp-proxy}} functionality to allow deployment of IPv6 next hops for
+{{-peering-evpn-arp-proxy}} and Neighbor Discovery (ND) Proxy functionality
+to allow deployment of IPv6 next hops for
 IPv4 NLRIs {{-bgp-mixed-nh}}, without the need to assign public IPv4 addresses to
 any of the BGP speakers at IXPs.
 
@@ -315,6 +319,31 @@ their human-facing interfaces (Looking Glasses). It may be handy to display
 the original next hop (if it was IPv4), the actual IPv6 next hop, and also
 the result of the egress translation for a selected Client.
 
+## Transparent Next Hop Translation
+
+Some IXPs have not deployed ARP and ND snooping, and therefore they can't directly
+translate between IPv4 and IPv6 next hops. Instead, an alternative approach
+is possible, with an actual proxy machine inbetween.
+The IXP maintains two separate routing and forwarding domains, one serving
+Legacy speakers and Supporting speakers, and another one serving Unnumbered and
+Supporting speakers. All nodes in each domain can reach each other easily.
+
+To enable communication between these two domains, the IXP deploys an additional
+proxy node with two interfaces, each facing one of the domains, and connected
+to the route server by two separate BGP sessions, with Add-Path enabled.
+This proxy node acts as an explicit translator of the next hops between these
+two domains.
+
+The proxy node then scrubs all nexthops to its own address, and actually performs
+forwarding between the two domains.
+The proxy node may also assign different virtual next hop addresses to the
+Legacy and Unnumbered speakers and handle the ARP and ND requests accordingly.
+
+It may be possible to reply to the ARP and ND requests in a way that the traffic
+is sent directly to its final destination. The operators should carefully
+evalute all risks regarding this variant of ARP and ND spoofing. The full extent
+of this kind of configuration is outside the scope of this document.
+
 # Security Considerations
 
 Implementing the ARP and ND snooping should improve the overall security of IXPs
@@ -351,4 +380,6 @@ The IXP Interconnection Space address range is: x.0.0.0/8.
 # Acknowledgments
 {:numbered="false"}
 
-TODO
+The authors would like to thank André Grüneberg and Marian Rychtecký for
+valuable feedback and for designing and testing the alternative transparent
+next hop translation.

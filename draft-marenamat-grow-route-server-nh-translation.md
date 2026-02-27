@@ -51,6 +51,7 @@ normative:
 
 informative:
   RFC1918: private-ipv4
+  RFC7911: addpath
   I-D.schoen-intarea-unicast-240: schoen-240
   DE-CIX-EVPN:
     title: Peering LAN 2.0 — Introduction of EVPN at DE-CIX
@@ -324,13 +325,14 @@ the result of the egress translation for a selected Client.
 Some IXPs have not deployed ARP and ND snooping, and therefore they can't directly
 translate between IPv4 and IPv6 next hops. Instead, an alternative approach
 is possible, with an actual proxy machine inbetween.
+
 The IXP maintains two separate routing and forwarding domains, one serving
 Legacy speakers and Supporting speakers, and another one serving Unnumbered and
 Supporting speakers. All nodes in each domain can reach each other easily.
 
 To enable communication between these two domains, the IXP deploys an additional
 proxy node with two interfaces, each facing one of the domains, and connected
-to the route server by two separate BGP sessions, with Add-Path enabled.
+to the route server by two separate BGP sessions, with Add-Path {{-addpath}} enabled.
 This proxy node acts as an explicit translator of the next hops between these
 two domains.
 

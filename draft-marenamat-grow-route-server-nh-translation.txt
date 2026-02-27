@@ -6,7 +6,7 @@ Global Routing Operations                                     M. Matejka
 Internet-Draft                                                    CZ.NIC
 Updates: 6890, 7947 (if approved)                              D. Wagner
 Intended status: Standards Track                                  DE-CIX
-Expires: 4 April 2026                                     1 October 2025
+Expires: 31 August 2026                                 27 February 2026
 
 
                    Route Server Next Hop Translation
@@ -24,6 +24,10 @@ Abstract
    introduces the concept of Specific Local Address Tables (SLATs).
    SLATs translate BGP next hops between all IXP members, regardless of
    their RFC8950 support, paving the way for IPv6-only IXPs.
+
+   This document also introduces another, more transparent variant of
+   BGP next hop translation applicable in IXPs which do not employ ARP
+   and ND proxying.
 
    This document updates RFC 6890 by registering a special-purpose
    address, and RFC 7947 by specifying an allowed route modification at
@@ -61,11 +65,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 April 2026.
+   This Internet-Draft will expire on 31 August 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -93,6 +97,7 @@ Table of Contents
      5.1.  Step-by-Step Rollout
      5.2.  Bilateral Peerings
      5.3.  Address Translation Transparency
+     5.4.  Transparent Next Hop Translation
    6.  Security Considerations
    7.  IANA Considerations
    8.  References
@@ -121,9 +126,10 @@ Table of Contents
    supported.
 
    This document specifies how to extend the Address Resolution Protocol
-   (ARP) Proxy [RFC9161] functionality to allow deployment of IPv6 next
-   hops for IPv4 NLRIs [RFC8950], without the need to assign public IPv4
-   addresses to any of the BGP speakers at IXPs.
+   (ARP) Proxy [RFC9161] and Neighbor Discovery (ND) Proxy functionality
+   to allow deployment of IPv6 next hops for IPv4 NLRIs [RFC8950],
+   without the need to assign public IPv4 addresses to any of the BGP
+   speakers at IXPs.
 
    This document does not cover IPv6 NLRIs with IPv4 next hops.
 
@@ -374,6 +380,36 @@ Table of Contents
    IPv6 next hop, and also the result of the egress translation for a
    selected Client.
 
+5.4.  Transparent Next Hop Translation
+
+   Some IXPs have not deployed ARP and ND snooping, and therefore they
+   can't directly translate between IPv4 and IPv6 next hops.  Instead,
+   an alternative approach is possible, with an actual proxy machine
+   inbetween.
+
+   The IXP maintains two separate routing and forwarding domains, one
+   serving Legacy speakers and Supporting speakers, and another one
+   serving Unnumbered and Supporting speakers.  All nodes in each domain
+   can reach each other easily.
+
+   To enable communication between these two domains, the IXP deploys an
+   additional proxy node with two interfaces, each facing one of the
+   domains, and connected to the route server by two separate BGP
+   sessions, with Add-Path [RFC7911] enabled.  This proxy node acts as
+   an explicit translator of the next hops between these two domains.
+
+   The proxy node then scrubs all nexthops to its own address, and
+   actually performs forwarding between the two domains.  The proxy node
+   may also assign different virtual next hop addresses to the Legacy
+   and Unnumbered speakers and handle the ARP and ND requests
+   accordingly.
+
+   It may be possible to reply to the ARP and ND requests in a way that
+   the traffic is sent directly to its final destination.  The operators
+   should carefully evalute all risks regarding this variant of ARP and
+   ND spoofing.  The full extent of this kind of configuration is
+   outside the scope of this document.
+
 6.  Security Considerations
 
    Implementing the ARP and ND snooping should improve the overall
@@ -475,9 +511,16 @@ Table of Contents
               Internets", BCP 5, RFC 1918, DOI 10.17487/RFC1918,
               February 1996, <https://www.rfc-editor.org/rfc/rfc1918>.
 
+   [RFC7911]  Walton, D., Retana, A., Chen, E., and J. Scudder,
+              "Advertisement of Multiple Paths in BGP", RFC 7911,
+              DOI 10.17487/RFC7911, July 2016,
+              <https://www.rfc-editor.org/rfc/rfc7911>.
+
 Acknowledgments
 
-   TODO
+   The authors would like to thank André Grüneberg and Marian Rychtecký
+   for valuable feedback and for designing and testing the alternative
+   transparent next hop translation.
 
 Authors' Addresses
 

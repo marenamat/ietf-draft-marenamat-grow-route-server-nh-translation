@@ -15,28 +15,29 @@ not supporting RFC8950 are a technical roadblock.
 of those of every unsupporting router. Thus, this document introduces the concept of Specific
 Local Address Tables (SLATs). SLATs translate BGP next hops between all IXP members,
 regardless of their RFC8950 support, paving the way for IPv6-only IXPs. 
+       This document also introduces another, more transparent variant of BGP next hop
+translation applicable in IXPs which do not employ ARP and ND proxying. 
        This document updates RFC 6890 by registering a special-purpose address,
 and RFC 7947 by specifying an allowed route modification at the route server. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="coexistence of IPv4 and IPv6" name="keyword">
 <meta content="ARP proxying" name="keyword">
 <meta content="address translation" name="keyword">
 <meta content="draft-marenamat-grow-route-server-nh-translation-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.4.0
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
+    PyYAML 6.0.3
     requests 2.32.5
-    setuptools 80.9.0
-    wcwidth 0.2.13
+    wcwidth 0.3.0
 -->
 <link href="draft-marenamat-grow-route-server-nh-translation.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -177,7 +178,7 @@ and RFC 7947 by specifying an allowed route modification at the route server.
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
   font-family: 'Oxygen Mono';
@@ -185,7 +186,8 @@ and RFC 7947 by specifying an allowed route modification at the route server.
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 }
 
 @font-face {
@@ -577,6 +579,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -647,7 +650,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1055,11 +1058,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Route Server Next Hop Translation</td>
-<td class="right">October 2025</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Matejka &amp; Wagner</td>
-<td class="center">Expires 4 April 2026</td>
+<td class="center">Expires 31 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1075,12 +1078,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6890" class="eref">6890</a>, <a href="https://www.rfc-editor.org/rfc/rfc7947" class="eref">7947</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-01" class="published">1 October 2025</time>
+<time datetime="2026-02-27" class="published">27 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-04">4 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-31">31 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1104,8 +1107,10 @@ not supporting RFC8950 are a technical roadblock.<a href="#section-abstract-1" c
 of those of every unsupporting router. Thus, this document introduces the concept of Specific
 Local Address Tables (SLATs). SLATs translate BGP next hops between all IXP members,
 regardless of their RFC8950 support, paving the way for IPv6-only IXPs.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">This document updates RFC 6890 by registering a special-purpose address,
-and RFC 7947 by specifying an allowed route modification at the route server.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">This document also introduces another, more transparent variant of BGP next hop
+translation applicable in IXPs which do not employ ARP and ND proxying.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-4">This document updates RFC 6890 by registering a special-purpose address,
+and RFC 7947 by specifying an allowed route modification at the route server.<a href="#section-abstract-4" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1141,7 +1146,7 @@ and RFC 7947 by specifying an allowed route modification at the route server.<a 
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1150,7 +1155,7 @@ and RFC 7947 by specifying an allowed route modification at the route server.<a 
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1216,6 +1221,9 @@ and RFC 7947 by specifying an allowed route modification at the route server.<a 
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-address-translation-transpa" class="internal xref">Address Translation Transparency</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-transparent-next-hop-transl" class="internal xref">Transparent Next Hop Translation</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
@@ -1264,7 +1272,8 @@ In the IXP environment, however, these networks would still require an IPv4 addr
 to be assigned to allow for routing from and to legacy-only networks where IPv6 next hops
 for IPv4 NLRIs <span>[<a href="#RFC8950" class="cite xref">RFC8950</a>]</span> are not supported.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This document specifies how to extend the Address Resolution Protocol (ARP) Proxy
-<span>[<a href="#RFC9161" class="cite xref">RFC9161</a>]</span> functionality to allow deployment of IPv6 next hops for
+<span>[<a href="#RFC9161" class="cite xref">RFC9161</a>]</span> and Neighbor Discovery (ND) Proxy functionality
+to allow deployment of IPv6 next hops for
 IPv4 NLRIs <span>[<a href="#RFC8950" class="cite xref">RFC8950</a>]</span>, without the need to assign public IPv4 addresses to
 any of the BGP speakers at IXPs.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">This document does not cover IPv6 NLRIs with IPv4 next hops.<a href="#section-1-4" class="pilcrow">¶</a></p>
@@ -1637,6 +1646,32 @@ the original next hop (if it was IPv4), the actual IPv6 next hop, and also
 the result of the egress translation for a selected Client.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="transparent-next-hop-translation">
+<section id="section-5.4">
+        <h3 id="name-transparent-next-hop-transl">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-transparent-next-hop-transl" class="section-name selfRef">Transparent Next Hop Translation</a>
+        </h3>
+<p id="section-5.4-1">Some IXPs have not deployed ARP and ND snooping, and therefore they can't directly
+translate between IPv4 and IPv6 next hops. Instead, an alternative approach
+is possible, with an actual proxy machine inbetween.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-2">The IXP maintains two separate routing and forwarding domains, one serving
+Legacy speakers and Supporting speakers, and another one serving Unnumbered and
+Supporting speakers. All nodes in each domain can reach each other easily.<a href="#section-5.4-2" class="pilcrow">¶</a></p>
+<p id="section-5.4-3">To enable communication between these two domains, the IXP deploys an additional
+proxy node with two interfaces, each facing one of the domains, and connected
+to the route server by two separate BGP sessions, with Add-Path <span>[<a href="#RFC7911" class="cite xref">RFC7911</a>]</span> enabled.
+This proxy node acts as an explicit translator of the next hops between these
+two domains.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
+<p id="section-5.4-4">The proxy node then scrubs all nexthops to its own address, and actually performs
+forwarding between the two domains.
+The proxy node may also assign different virtual next hop addresses to the
+Legacy and Unnumbered speakers and handle the ARP and ND requests accordingly.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
+<p id="section-5.4-5">It may be possible to reply to the ARP and ND requests in a way that the traffic
+is sent directly to its final destination. The operators should carefully
+evalute all risks regarding this variant of ARP and ND spoofing. The full extent
+of this kind of configuration is outside the scope of this document.<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
@@ -1731,8 +1766,12 @@ for use as IXP Interconnection Space as requested in <a href="#ixp-interconnecti
 <span class="refAuthor">Schoen, S. D.</span>, <span class="refAuthor">Gilmore, J. I.</span>, and <span class="refAuthor">D. M. Täht</span>, <span class="refTitle">"Unicast Use of the Formerly Reserved 240/4"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-schoen-intarea-unicast-240-09</span>, <time datetime="2025-06-23" class="refDate">23 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-schoen-intarea-unicast-240-09">https://datatracker.ietf.org/doc/html/draft-schoen-intarea-unicast-240-09</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1918">[RFC1918]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Rekhter, Y.</span>, <span class="refAuthor">Moskowitz, B.</span>, <span class="refAuthor">Karrenberg, D.</span>, <span class="refAuthor">de Groot, G. J.</span>, and <span class="refAuthor">E. Lear</span>, <span class="refTitle">"Address Allocation for Private Internets"</span>, <span class="seriesInfo">BCP 5</span>, <span class="seriesInfo">RFC 1918</span>, <span class="seriesInfo">DOI 10.17487/RFC1918</span>, <time datetime="1996-02" class="refDate">February 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1918">https://www.rfc-editor.org/rfc/rfc1918</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7911">[RFC7911]</dt>
+      <dd>
+<span class="refAuthor">Walton, D.</span>, <span class="refAuthor">Retana, A.</span>, <span class="refAuthor">Chen, E.</span>, and <span class="refAuthor">J. Scudder</span>, <span class="refTitle">"Advertisement of Multiple Paths in BGP"</span>, <span class="seriesInfo">RFC 7911</span>, <span class="seriesInfo">DOI 10.17487/RFC7911</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7911">https://www.rfc-editor.org/rfc/rfc7911</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1744,7 +1783,9 @@ for use as IXP Interconnection Space as requested in <a href="#ixp-interconnecti
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">The authors would like to thank André Grüneberg and Marian Rychtecký for
+valuable feedback and for designing and testing the alternative transparent
+next hop translation.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">

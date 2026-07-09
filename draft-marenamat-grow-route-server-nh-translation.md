@@ -40,6 +40,14 @@ author:
     country: Germany
     email:
     - daniel.wagner@de-cix.net
+  - name: Tobias Striffler
+    org: DE-CIX
+    street: Lindleystraße 12
+    city: Frankfurt am Main
+    code: 60314
+    country: Germany
+    email:
+    - tobias.striffler@de-cix.net
 
 normative:
   RFC4271: bgp
@@ -294,31 +302,33 @@ speakers to use that server while keeping also the traditional one.
 The SLAT may be started as uniform for every Client reflecting the current address
 assignment from the Production IPv4 prefix. This allows the Legacy Speakers into
 the new route server, and gradual renumbering may occur later, Client-by-Client,
-when the Production IPv4 prefix starts being exhausted.
+when the Production IPv4 prefix is exhausted.
 
-The Clients have to properly assess which address range is suitable for them to use
-for IXP interconnection. If using the IXP Interconnection Space, they also have to
+The Clients have to properly assess which address range is available for them to use
+for next hop translation. If using the IXP Interconnection Space, they SHOULD
 check whether these addresses are considered eligible as next hops by their routing
 equipment.
 
 ## Bilateral Peerings
 
-There might be reasons why any two Clients do not want to use the IXP's RS to
-exchange their routing information. Hence, the information from the SLAT
-should be made publicly available and kept up to date. Clients can then perform
-the next hop translation themselves.
+Clients may have policies that require them to exchange routing information via
+bilateral peering sessions. In that case, the translating IXP RS cannot be used
+for performing the next-hop translation. The information from the SLAT
+should be made publicly available and kept up to date to enable the Clients to
+perform the next hop translation themselves.
 
 An alternative is to introduce a new BGP community that tells the RS to exclude
-the routing information exchanged via such bilateral peerings from the Looking
-Glasses (LG). This can be useful if privacy is of a concern and no self-translation
-can be performed.
+routing information exchanged via such bilateral peerings from the Looking
+Glasses (LG). This helps to preserve routing policy privacy between the Clients
+and could eliminate the reason why they refrained from using the RS in the first
+place, allowing them to use it for next hop translation again.
 
 ## Address Translation Transparency
 
 The IXPs may have to rethink how they are displaying the route next hops in
 their human-facing interfaces (Looking Glasses). It may be handy to display
 the original next hop (if it was IPv4), the actual IPv6 next hop, and also
-the result of the egress translation for a selected Client.
+the result of the egress translation for a given Client.
 
 ## Transparent Next Hop Translation
 
@@ -348,7 +358,7 @@ of this kind of configuration is outside the scope of this document.
 
 # Security Considerations
 
-Implementing the ARP and ND snooping should improve the overall security of IXPs
+Implementing the ARP and ND snooping is expetecd to improve the overall security of IXPs
 by blocking possible ARP or ND spoofing, both inadvertent and intended {{DE-CIX-EVPN}}.
 
 Mistakes in the MAC address registration and manual management of IP address assignment

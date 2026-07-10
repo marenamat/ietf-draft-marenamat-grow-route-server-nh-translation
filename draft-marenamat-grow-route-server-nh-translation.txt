@@ -5,8 +5,9 @@
 Global Routing Operations                                     M. Matejka
 Internet-Draft                                                    CZ.NIC
 Updates: 6890, 7947 (if approved)                              D. Wagner
-Intended status: Standards Track                                  DE-CIX
-Expires: 31 August 2026                                 27 February 2026
+Intended status: Standards Track                            T. Striffler
+Expires: 11 January 2027                                          DE-CIX
+                                                            10 July 2026
 
 
                    Route Server Next Hop Translation
@@ -65,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2026.
+   This Internet-Draft will expire on 11 January 2027.
 
 Copyright Notice
 
@@ -351,26 +352,28 @@ Table of Contents
    current address assignment from the Production IPv4 prefix.  This
    allows the Legacy Speakers into the new route server, and gradual
    renumbering may occur later, Client-by-Client, when the Production
-   IPv4 prefix starts being exhausted.
+   IPv4 prefix is exhausted.
 
-   The Clients have to properly assess which address range is suitable
-   for them to use for IXP interconnection.  If using the IXP
-   Interconnection Space, they also have to check whether these
-   addresses are considered eligible as next hops by their routing
-   equipment.
+   The Clients have to properly assess which address range is available
+   for them to use for next hop translation.  If using the IXP
+   Interconnection Space, they SHOULD check whether these addresses are
+   considered eligible as next hops by their routing equipment.
 
 5.2.  Bilateral Peerings
 
-   There might be reasons why any two Clients do not want to use the
-   IXP's RS to exchange their routing information.  Hence, the
-   information from the SLAT should be made publicly available and kept
-   up to date.  Clients can then perform the next hop translation
-   themselves.
+   Clients may have policies that require them to exchange routing
+   information via bilateral peering sessions.  In that case, the
+   translating IXP RS cannot be used for performing the next-hop
+   translation.  The information from the SLAT should be made publicly
+   available and kept up to date to enable the Clients to perform the
+   next hop translation themselves.
 
    An alternative is to introduce a new BGP community that tells the RS
-   to exclude the routing information exchanged via such bilateral
-   peerings from the Looking Glasses (LG).  This can be useful if
-   privacy is of a concern and no self-translation can be performed.
+   to exclude routing information exchanged via such bilateral peerings
+   from the Looking Glasses (LG).  This helps to preserve routing policy
+   privacy between the Clients and could eliminate the reason why they
+   refrained from using the RS in the first place, allowing them to use
+   it for next hop translation again.
 
 5.3.  Address Translation Transparency
 
@@ -378,7 +381,7 @@ Table of Contents
    hops in their human-facing interfaces (Looking Glasses).  It may be
    handy to display the original next hop (if it was IPv4), the actual
    IPv6 next hop, and also the result of the egress translation for a
-   selected Client.
+   given Client.
 
 5.4.  Transparent Next Hop Translation
 
@@ -412,9 +415,9 @@ Table of Contents
 
 6.  Security Considerations
 
-   Implementing the ARP and ND snooping should improve the overall
-   security of IXPs by blocking possible ARP or ND spoofing, both
-   inadvertent and intended [DE-CIX-EVPN].
+   Implementing the ARP and ND snooping is expetecd to improve the
+   overall security of IXPs by blocking possible ARP or ND spoofing,
+   both inadvertent and intended [DE-CIX-EVPN].
 
    Mistakes in the MAC address registration and manual management of IP
    address assignment may lead to inadvertent invalid route
@@ -538,3 +541,11 @@ Authors' Addresses
    60314 Frankfurt am Main
    Germany
    Email: daniel.wagner@de-cix.net
+
+
+   Tobias Striffler
+   DE-CIX
+   Lindleystraße 12
+   60314 Frankfurt am Main
+   Germany
+   Email: tobias.striffler@de-cix.net

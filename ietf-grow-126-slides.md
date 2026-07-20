@@ -17,6 +17,12 @@ end-subtitle: Request For WG Adoption
 .footer {
     background: none!important;
 }
+.side-legend {
+    position: absolute;
+    left: 30em;
+    top: 9em;
+    font-size: 85%;
+}
 </style>
 
 - Legacy speakers
@@ -53,6 +59,12 @@ clients can be transferred one by one.*
 
 ![](simple-proxy.drawio.png){ width=85% }
 
+<div class="side-legend">
+red: traffic  
+blue: BGP  
+green: ARP/ND only
+</div>
+
 # The Virtual proxy way (this draft, sec. 5.4)
 
 - Setup two domains (legacy / RFC8950)
@@ -64,6 +76,12 @@ clients can be transferred one by one.*
 # The Virtual proxy way (this draft, sec. 5.4)
 
 ![](simple-proxy-with-translation.drawio.png){ width=85% }
+
+<div class="side-legend">
+red: traffic  
+blue: BGP  
+**green: ARP/ND only**
+</div>
 
 # The Edge mini-proxy way (most of this draft)
 
@@ -87,13 +105,15 @@ clients can be transferred one by one.*
 - Currently uses public ranges
 - Alternative: private ranges → may clash with internal 
 
+*We still need IPv4 for all clients, as long as even one client is legacy.*
+
 # Allocation request from 240/4 (former class E)
 
 - The route server prefix is weird
 - This is not "repurposing for unicast"
 - RIRs already have a route server reserved space (allocated by /27s)
 - Goal: Split out this next hop space
-- Goal: Only one more renumbering to happen.
+- Goal: At most one more renumbering to happen.
 
 This can be also interpreted as a multi-node variant of  
 [`draft-vanmook-intarea-ipv6-resolved-gateway`](https://datatracker.ietf.org/doc/draft-vanmook-intarea-ipv6-resolved-gateway)

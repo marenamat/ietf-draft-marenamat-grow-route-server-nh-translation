@@ -87,21 +87,29 @@ clients can be transferred one by one.*
 - Currently uses public ranges
 - Alternative: private ranges → may clash with internal 
 
-# Allocation request from 240/4
+# Allocation request from 240/4 (former class E)
 
 - The route server prefix is weird
 - This is not "repurposing for unicast"
+- RIRs already have a route server reserved space (allocated by /27s)
 - Goal: Split out this next hop space
 - Goal: Only one more renumbering to happen.
 
 This can be also interpreted as a multi-node variant of  
 [`draft-vanmook-intarea-ipv6-resolved-gateway`](https://datatracker.ietf.org/doc/draft-vanmook-intarea-ipv6-resolved-gateway)
 
+# Proposed allocation policy (not yet in the draft)
+
+- Overall: /8 or /7
+- Allocated to RIRs: /12 ranges
+- Minimal allocation by RIR: /24
+
+*Currently largest route server would need a /20 block.*
+
 # State of the work
 
-- We think it's done, and it fits the WG purpose  
+- We think it's almost done, and it fits the WG purpose  
   → we request WG adoption and continuation with the process
 - It's already configurable with BIRD with no code change
 - We expect to look into other implementations
 - The allocation request may be a friction point  
-  *but we think it's reasonable*

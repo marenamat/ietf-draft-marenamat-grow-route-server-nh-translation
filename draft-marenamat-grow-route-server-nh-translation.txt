@@ -6,8 +6,8 @@ Global Routing Operations                                     M. Matejka
 Internet-Draft                                                    CZ.NIC
 Updates: 6890, 7947 (if approved)                              D. Wagner
 Intended status: Standards Track                            T. Striffler
-Expires: 20 January 2027                                          DE-CIX
-                                                            19 July 2026
+Expires: 21 January 2027                                          DE-CIX
+                                                            20 July 2026
 
 
                    Route Server Next Hop Translation
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2027.
+   This Internet-Draft will expire on 21 January 2027.
 
 Copyright Notice
 

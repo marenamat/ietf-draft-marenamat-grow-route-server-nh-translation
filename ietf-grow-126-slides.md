@@ -96,40 +96,12 @@ blue: BGP
 
 ![](simple-proxy-with-translation-evpn.drawio.png){ width=85% }
 
-# Route server renumbering
-
-- Obtaining larger IPv4 prefices is hard
-- Renumbering is laborous
-- The route server prefix is never actually routed in BGP
-- Appears in IGP as prefix, and in iBGP as next hop
-- Currently uses public ranges
-- Alternative: private ranges → may clash with internal 
-
-*We still need IPv4 for all clients, as long as even one client is legacy.*
-
-# Allocation request from 240/4 (former class E)
-
-- The route server prefix is weird
-- This is not "repurposing for unicast"
-- RIRs already have a route server reserved space (allocated by /27s)
-- Goal: Split out this next hop space
-- Goal: At most one more renumbering to happen.
-
-This can be also interpreted as a multi-node variant of  
-[`draft-vanmook-intarea-ipv6-resolved-gateway`](https://datatracker.ietf.org/doc/draft-vanmook-intarea-ipv6-resolved-gateway)
-
-# Proposed allocation policy (not yet in the draft)
-
-- Overall: /8 or /7
-- Allocated to RIRs: /12 ranges
-- Minimal allocation by RIR: /24
-
-*Currently largest route server would need a /20 block.*
-
 # State of the work
 
 - We think it's almost done, and it fits the WG purpose  
   → we request WG adoption and continuation with the process
 - It's already configurable with BIRD with no code change
 - We expect to look into other implementations
-- The allocation request may be a friction point  
+
+*We have removed the request for an IANA action as it isn't technically
+strictly connected to the document's purpose.*

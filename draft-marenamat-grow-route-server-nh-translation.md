@@ -6,7 +6,7 @@ category: std
 docname: draft-marenamat-grow-route-server-nh-translation-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
-updates: 6890, 7947
+updates: 7947
 date:
 consensus: true
 v: 3
@@ -51,7 +51,6 @@ author:
 
 normative:
   RFC4271: bgp
-  RFC6890: special-purpose-ip
   RFC7947: internet-exchange
   RFC8950: bgp-mixed-nh
   RFC9161: peering-evpn-arp-proxy
@@ -73,7 +72,7 @@ informative:
 
 --- abstract
 
-With the advent of RFC8950, Internet Exchang Points (IXPs) are enabled to rely
+With the advent of RFC8950, Internet Exchange Points (IXPs) are enabled to rely
 solely on IPv6 addresses for adressing in their peering LANs. However, routers
 not supporting RFC8950 are a technical roadblock.
 
@@ -85,8 +84,7 @@ regardless of their RFC8950 support, paving the way for IPv6-only IXPs.
 This document also introduces another, more transparent variant of BGP next hop
 translation applicable in IXPs which do not employ ARP and ND proxying.
 
-This document updates RFC 6890 by registering a special-purpose address,
-and RFC 7947 by specifying an allowed route modification at the route server.
+This document updates RFC 7947 by specifying an allowed route modification at the route server.
 
 --- middle
 
@@ -94,7 +92,7 @@ and RFC 7947 by specifying an allowed route modification at the route server.
 
 Traditionally, Internet Exchange Point (IXP) Border Gateway Protocol (BGP)
 Route Servers (RS) {{-internet-exchange}} serve IPv6 Network Layer Reachability
-Information (NRLI) with IPv6 next hops, and IPv4 NLRI with IPv4 next hops to the
+Information (NLRI) with IPv6 next hops, and IPv4 NLRI with IPv4 next hops to the
 BGP speakers in their peering LAN.
 On the one hand, this dual-stack operation allows both IPv4 and IPv6 supporting BGP
 speakers to exchange NLRI with another and the route server. On
@@ -118,10 +116,10 @@ This document does not cover IPv6 NLRIs with IPv4 next hops.
 # Conventions and Definitions
 
 The terminology of {{-peering-evpn-arp-proxy}}, {{-internet-exchange}}
-and {{-bgp}} applies.
+and {{-bgp}} applies. Also, see abbreviations in the Introduction.
 
 Client:
-: A BGP speaker which is connected to the IXP's Route Server. The Client
+: A BGP speaker which is connected to the IXP's RS. The Client
   may be a Legacy speaker, Supporting speaker or Unnumbered speaker.
 
 Legacy speaker:
@@ -177,19 +175,20 @@ used for GUA allocation if there are unused addresses available
 and the above requirement holds.
 
 The resulting set of triples is stored in a Local Address Table (LAT).
-This table is maintained by the IXP and used to translate next hops
+This table is maintained by the IXP and is used to translate next hops
 to MAC addresses for Unnumbered speakers.
 
 | MAC Address | Link Local Address | Global Unicast Address |
-| 00-00-5E-00-53-10 | FE80::10 | 2001:db8::10 |
-| 00-00-5E-00-53-20 | FE80::20 | 2001:db8::20 |
+| 00-00-5E-00-53-10 | fe80::10 | 2001:db8::10 |
+| 00-00-5E-00-53-20 | fe80::20 | 2001:db8::20 |
 | ... | ... | ... |
 {: title="Local Address Table (LAT)"}
 
 ### IPv4 Address Assignment
 
 Due to IPv4 scarcity, IXP are typically assigned much less spacious
-Production IPv4 prefixes than Production IPv6 prefixes. Therefore, the IXP,
+Production IPv4 prefixes than Production IPv6 prefixes, if ever assigned.
+Therefore, the IXP,
 in cooperation with every Supporting Speaker and Legacy Speaker, MUST decide
 on an IPv4 prefix (or a set of IPv4 prefixes) short enough to accommodate
 the number of Clients in the IXP network. This prefix MAY be different
@@ -204,8 +203,8 @@ to MAC addresses for Legacy speakers.
 
 | MAC Address | Link Local Address | Global Unicast Address | CSLP 1 | CLSP 2 | ...
 | MAC Address | Link Local Address | Global Unicast Address | CSLP 1 | CLSP 2 | ...
-| 00-00-5E-00-53-10 | FE80::10 | 2001:db8::10 | 10.0.0.10 | 192.0.2.10 | ...
-| 00-00-5E-00-53-20 | FE80::20 | 2001:db8::20 | 10.0.0.20 | 192.0.2.20 | ...
+| 00-00-5E-00-53-10 | fe80::10 | 2001:db8::10 | 10.0.0.10 | 192.0.2.10 | ...
+| 00-00-5E-00-53-20 | fe80::20 | 2001:db8::20 | 10.0.0.20 | 192.0.2.20 | ...
 | ... | ... | ... | ... | ... | ...
 {: title="Specific Local Address Table (SLAT)"}
 
@@ -244,52 +243,6 @@ holds an address not assigned to any Clients in the SLAT.
 
 {{Section 2.2.1 of -internet-exchange}} does not apply.
 
-# IXP Interconnection Space {#ixp-interconnection-space}
-
-This document requests an allocation of an IPv4 IXP Interconnection Space
-from the experimental range. By previous efforts {{-schoen-240}}, it has already
-been shown that these addresses are technically feasible to be used in limited
-environments. Here, the use is limited for local next hop resolution and possibly
-BGP session addressing.
-
-It is RECOMMENDED that this prefix is used as the CLSP for every Client that does
-not use this prefix for other purposes. Having the same prefix as the IXP
-Interconnection Space for many Clients helps to reduce the size of the SLAT.
-
-Clients MUST NOT propagate any routes with IPv4 NLRI from the
-IXP Interconnection Space.
-
-{{Section 2.2.2 of -special-purpose-ip}} is updated by adding the following
-record:
-
-| -------------------- | ------------------------- |
-| Attribute            | Value                     |
-| -------------------- | ------------------------- |
-| Address Block        | TBD                       |
-| Name                 | IXP Interconnection Space |
-| RFC                  | TBD                       |
-| Allocation Date      | TBD                       |
-| Termination Date     | N/A                       |
-| Source               | False                     |
-| Destination          | False                     |
-| Forwardable          | False                     |
-| Global               | False                     |
-| Reserved-by-Protocol | False                     |
-| -------------------- | ------------------------- |
-{: title="Shared Address Space"}
-
-The allocation is probably not strictly needed, as most of the Legacy Speakers
-will still have some of the private IPv4 addresses {{-private-ipv4}} available
-to use for the SLAT.  Yet, these available ranges may be different between
-networks. To reduce complexity, this allocation will help IXPs to have a shared
-SLAT for most of the Legacy Speakers.
-
-Some large networks have also claimed recently {{Section 6.1 of -schoen-240}}
-that they are already using the experimental range for their internal purposes
-because they are already out of the private IPv4 addresses. These networks would
-have probably needed to negotiate a custom CLSP with the IXP anyway, with
-or without the allocation.
-
 # Operational and Management Considerations
 
 ## Step-by-Step Rollout
@@ -301,13 +254,9 @@ speakers to use that server while keeping also the traditional one.
 
 The SLAT may be started as uniform for every Client reflecting the current address
 assignment from the Production IPv4 prefix. This allows the Legacy Speakers into
-the new route server, and gradual renumbering may occur later, Client-by-Client,
-when the Production IPv4 prefix is exhausted.
-
-The Clients have to properly assess which address range is available for them to use
-for next hop translation. If using the IXP Interconnection Space, they SHOULD
-check whether these addresses are considered eligible as next hops by their routing
-equipment.
+the new route server, and when the Production IPv4 prefix nears depletion, Clients
+may get their SLATs renumbered into some other address range, e.g. from the private
+IP ranges {{-private-ipv4}}.
 
 ## Bilateral Peerings
 
@@ -321,7 +270,8 @@ An alternative is to introduce a new BGP community that tells the RS to exclude
 routing information exchanged via such bilateral peerings from the Looking
 Glasses (LG). This helps to preserve routing policy privacy between the Clients
 and could eliminate the reason why they refrained from using the RS in the first
-place, allowing them to use it for next hop translation again.
+place, allowing them to use it for next hop translation again. This community
+is to be specified by the route server.
 
 ## Address Translation Transparency
 
@@ -358,7 +308,7 @@ of this kind of configuration is outside the scope of this document.
 
 # Security Considerations
 
-Implementing the ARP and ND snooping is expetecd to improve the overall security of IXPs
+Implementing the ARP and ND snooping is expected to improve the overall security of IXPs
 by blocking possible ARP or ND spoofing, both inadvertent and intended {{DE-CIX-EVPN}}.
 
 Mistakes in the MAC address registration and manual management of IP address assignment
@@ -374,18 +324,12 @@ Mistakes in route announcements are contained to the route not being propagated 
 Mistakes in the Client setup may lead to spreading unreachable routes across
 their autonomous systems, causing inefficient routing.
 
-It is recommended to log rogue GARP or IPv6 DAD communication to detect
+It is recommended to log rogue GARP and IPv6 DAD communication to detect
 possible misconfigurations.
 
 # IANA Considerations
 
-IANA is asked to record the allocation of an IPv4 /8 from the 240/4 range
-for use as IXP Interconnection Space as requested in {{ixp-interconnection-space}}.
-
-The IXP Interconnection Space address range is: x.0.0.0/8.
-
-*\[Note to RFC Editor: this address range to be added before publication\]*
-
+This document has no IANA actions.
 
 --- back
 
